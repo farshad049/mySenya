@@ -8,10 +8,10 @@ import com.bumptech.glide.Glide
 import com.example.mysenya.R
 import com.example.mysenya.data.Attraction
 import com.example.mysenya.databinding.ViewHolderAttractionBinding
+import com.squareup.picasso.Picasso
 
 
 class HomeFragmentAdapter(
-    private val context: Context,
     private val onClickedCallback:() -> Unit
 ):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -43,7 +43,8 @@ class HomeFragmentAdapter(
 
         fun onBind(attraction:Attraction,onClicked:() -> Unit){
             binding.tvTitle.text=attraction.title
-            Glide.with(context).load(attraction.image_urls).placeholder(R.mipmap.ic_launcher).into(binding.ivImage)
+            //Glide.with(context).load(attraction.image_urls).placeholder(R.mipmap.ic_launcher).into(binding.ivImage)
+            Picasso.get().load(attraction.image_urls).into(binding.ivImage)
             binding.tvMonthTovisit.text=attraction.months_to_visit
             binding.root.setOnClickListener {
                 onClicked()

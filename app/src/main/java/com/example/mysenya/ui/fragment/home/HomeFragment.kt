@@ -23,13 +23,12 @@ class HomeFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val homeAdapter=HomeFragmentAdapter(mainActivity){
+        val homeAdapter=HomeFragmentAdapter{
 
         }
 
         binding.recyclerView.adapter=homeAdapter
-
-        homeAdapter.setData(emptyList())
+        homeAdapter.setData(attractions)
 
 
 
