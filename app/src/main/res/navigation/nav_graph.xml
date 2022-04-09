@@ -31,5 +31,4 @@
             android:defaultValue="false"
             />
     </fragment>
-
 </navigation>
