@@ -1,5 +1,5 @@
 package com.example.mysenya.data
 
-class AttractionsResponse {
-    val attractions:List<Attraction> = listOf()
-}
+data class AttractionsResponse(
+    val attractions: List<Attraction> = listOf()
+)
