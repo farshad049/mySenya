@@ -44,7 +44,7 @@ class HomeFragmentAdapter(
         fun onBind(attraction:Attraction,onClicked:() -> Unit){
             binding.tvTitle.text=attraction.title
             //Glide.with(context).load(attraction.image_urls).placeholder(R.mipmap.ic_launcher).into(binding.ivImage)
-            Picasso.get().load(attraction.image_urls).into(binding.ivImage)
+            Picasso.get().load(attraction.image_url).into(binding.ivImage)
             binding.tvMonthTovisit.text=attraction.months_to_visit
             binding.root.setOnClickListener {
                 onClicked()
