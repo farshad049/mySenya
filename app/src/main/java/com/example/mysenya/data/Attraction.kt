@@ -1,4 +1,4 @@
-package com.example.mysenya.data
+package com.dmp.senya.data
 
 data class Attraction(
     val description: String = "",

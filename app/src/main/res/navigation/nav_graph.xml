@@ -13,7 +13,12 @@
         >
         <action
             android:id="@+id/action_homeFragment_to_attractionDetailFragment"
-            app:destination="@id/attractionDetailFragment" />
+            app:destination="@id/attractionDetailFragment"
+
+            app:enterAnim="@anim/fragment_slide_in_right"
+            app:exitAnim="@anim/fragment_slide_out_left"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
     </fragment>
 
     <fragment
@@ -25,10 +30,6 @@
         <argument
             android:name="attractionId"
             app:argType="string" />
-        <argument
-            android:name="isFavorited"
-            app:argType="boolean"
-            android:defaultValue="false"
-            />
+
     </fragment>
 </navigation>
