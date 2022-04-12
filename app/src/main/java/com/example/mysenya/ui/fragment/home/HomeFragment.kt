@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysenya.databinding.FragmentHomeBinding
+import com.example.mysenya.ui.MainActivity
 import com.example.mysenya.ui.fragment.BaseFragment
 
 class HomeFragment: BaseFragment() {
@@ -25,15 +26,12 @@ class HomeFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //move to attraction activity
         val homeAdapter = HomeFragmentAdapter {attractionId ->
             val navDirection =HomeFragmentDirections.actionHomeFragmentToAttractionDetailFragment(attractionId)
             navController.navigate(navDirection)
-
-
             // todo handle item being clicked - navigate
         }
-
         binding.recyclerView.adapter = homeAdapter
         binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
 
