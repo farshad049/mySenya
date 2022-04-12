@@ -1,12 +1,13 @@
 package com.example.mysenya.ui.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.dmp.senya.data.Attraction
+import com.example.mysenya.R
 import com.example.mysenya.databinding.FragmentAttractionDetailBinding
 import com.squareup.picasso.Picasso
 
@@ -19,6 +20,12 @@ class AttractionDetailFragment:BaseFragment() {
     private val safeArgs:AttractionDetailFragmentArgs by navArgs()
     private val attraction:Attraction by lazy {
         attractions.find { it.id == safeArgs.attractionId}!!
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //enable menu
+        setHasOptionsMenu(true)
     }
 
 
@@ -37,6 +44,26 @@ class AttractionDetailFragment:BaseFragment() {
         binding.tvDetailTimeToVisit.text=attraction.months_to_visit
         binding.tvFacts.text="${attraction.facts.size} facts"
         binding.tvFacts.setOnClickListener {
+
+        }
+    }
+
+    //set menu layout
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_attraction_detail,menu)
+    }
+    //set on click listener for each menu item
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.menuItemLocation ->{
+                // Creates an Intent that will load a map of San Francisco
+                val uri = Uri.parse("geo:${attraction.location.latitude},${attraction.location.longitude}?z=9&q=${attraction.title}")
+                val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+                true//this is just for  onOptionsItemSelected requirement
+            }
+            else -> super.onOptionsItemSelected(item)
 
         }
 
