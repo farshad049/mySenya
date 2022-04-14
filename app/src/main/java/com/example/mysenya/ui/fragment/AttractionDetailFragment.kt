@@ -1,5 +1,7 @@
 package com.example.mysenya.ui.fragment
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -43,8 +45,22 @@ class AttractionDetailFragment:BaseFragment() {
         binding.tvDescription.text=attraction.description
         binding.tvDetailTimeToVisit.text=attraction.months_to_visit
         binding.tvFacts.text="${attraction.facts.size} facts"
-        binding.tvFacts.setOnClickListener {
+        //take each fact as a single string to show
+        val stringBuilder=StringBuilder("")
+        attraction.facts.forEach {
+            stringBuilder.append("\u2022  $it")
+            stringBuilder.append("\n\n")
+        }
+        //delete the last \n to prevent the last new line
+        val factsToShow=stringBuilder.toString().substring(0,stringBuilder.toString().lastIndexOf("\n\n"))
 
+        binding.tvFacts.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("${attraction.title} facts")
+                .setMessage(factsToShow)
+                .setPositiveButton("ok") {dialog,which -> TODO()}
+                .setCancelable(false)
+                .show()
         }
     }
 

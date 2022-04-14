@@ -26,6 +26,8 @@
         android:label="Attraction Details"
         tools:layout="@layout/fragment_attraction_detail"
         >
+        <deepLink app:uri="https://forexample.com/{attractionId}"/>
+
         <argument
             android:name="attractionId"
             app:argType="string" />
