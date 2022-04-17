@@ -1,7 +1,10 @@
 package com.example.mysenya.ui
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,6 +13,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.dmp.senya.data.Attraction
 import com.dmp.senya.data.AttractionsResponse
 import com.example.mysenya.R
+import com.example.mysenya.arch.AttractionsViewModel
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -21,11 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-    //all token file from json is now in here
-    val attractionsList: List<Attraction> by lazy {
-        parseAttractions()
-    }
+    //empty model of attractions
+    val viewModel:AttractionsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,17 @@ class MainActivity : AppCompatActivity() {
         //enable the action bar
         appBarConfiguration= AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController,appBarConfiguration)
+
+        //initialize viewModel
+        viewModel.init(this)
+        //do the functionality to open map intent because it's not AttractionDetaiFragment's job to do this
+        viewModel.locationSelectedLIveData.observe(this){attraction ->
+            // Creates an Intent that will load a map of San Francisco
+            val uri = Uri.parse("geo:${attraction.location.latitude},${attraction.location.longitude}?z=9&q=${attraction.title}")
+            val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
     }
 
     //enable back button on action bar
@@ -45,11 +57,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun parseAttractions(): List<Attraction> {
-        //pull re data from raw/croatia.json
-        val textFromFile = resources.openRawResource(R.raw.croatia).bufferedReader().use { it.readText() }
-        val adapter: JsonAdapter<AttractionsResponse> = moshi.adapter(AttractionsResponse::class.java)
 
-        return adapter.fromJson(textFromFile)!!.attractions
-    }
 }

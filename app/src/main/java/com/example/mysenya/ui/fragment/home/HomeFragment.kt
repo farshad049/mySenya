@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mysenya.R
 import com.example.mysenya.databinding.FragmentHomeBinding
 import com.example.mysenya.ui.MainActivity
 import com.example.mysenya.ui.fragment.BaseFragment
@@ -28,14 +29,16 @@ class HomeFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         //move to attraction activity
         val homeAdapter = HomeFragmentAdapter {attractionId ->
-            val navDirection =HomeFragmentDirections.actionHomeFragmentToAttractionDetailFragment(attractionId)
-            navController.navigate(navDirection)
-            // todo handle item being clicked - navigate
+            activityViewModel.onAttractionSelected(attractionId)
+            navController.navigate(R.id.action_homeFragment_to_attractionDetailFragment)
+
         }
         binding.recyclerView.adapter = homeAdapter
         binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
 
-        homeAdapter.setData(attractions)
+        activityViewModel.attractionListLiveData.observe(viewLifecycleOwner){attractions ->
+            homeAdapter.setData(attractions)
+        }
     }
 
     override fun onDestroyView() {
