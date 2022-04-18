@@ -9,8 +9,8 @@ import java.lang.StringBuilder
 class AttractionsViewModel:ViewModel() {
     private val repository= AttractionsRepository()
 
-    // for he fragment
-    val attractionListLiveData=MutableLiveData<List<Attraction>>()
+    // for home fragment
+    val attractionListLiveData=MutableLiveData<ArrayList<Attraction>>()
 
     // for AttractionDetailFragment
     val selectedAttractionLiveData=MutableLiveData<Attraction>()
