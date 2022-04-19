@@ -1,16 +1,16 @@
-package com.example.mysenya.ui.fragment
+package com.example.mysenya.ui.fragment.details
 
 import android.app.AlertDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.mysenya.R
 import com.example.mysenya.databinding.FragmentAttractionDetailBinding
+import com.example.mysenya.ui.fragment.BaseFragment
 import com.squareup.picasso.Picasso
 
 
-class AttractionDetailFragment:BaseFragment() {
+class AttractionDetailFragment: BaseFragment() {
 
     private var _binding: FragmentAttractionDetailBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +33,13 @@ class AttractionDetailFragment:BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner){attraction->
-            Picasso.get().load(attraction.image_url).into(binding.ivDetailImage)
+
+            binding.ivHeaderEpoxyRecyclerView.setControllerAndBuildModels(AttractionFragmentController(attraction.image_urls))
+            //in order to scroll images completely
+            LinearSnapHelper().attachToRecyclerView(binding.ivHeaderEpoxyRecyclerView)
+            //set page indicator
+            binding.indicator.attachToRecyclerView(binding.ivHeaderEpoxyRecyclerView)
+
             binding.tvDetailTitle.text=attraction.title
             binding.tvDescription.text=attraction.description
             binding.tvDetailTimeToVisit.text=attraction.months_to_visit

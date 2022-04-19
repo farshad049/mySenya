@@ -1,15 +1,14 @@
 package com.example.mysenya.ui.fragment.home
 
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyController
-import com.bumptech.glide.Glide
 import com.dmp.senya.data.Attraction
-
 import com.example.mysenya.R
+import com.example.mysenya.databinding.EpoxyModelHeaderBinding
+import com.example.mysenya.databinding.ModelHeaderImageBinding
 import com.example.mysenya.databinding.ViewHolderAttractionBinding
+import com.example.mysenya.ui.epoxy.EmptyEpoxyModel
+import com.example.mysenya.ui.epoxy.LoadingEpoxyModel
 import com.example.mysenya.ui.epoxy.ViewBindingKotlinModel
 import com.squareup.picasso.Picasso
 
@@ -17,6 +16,7 @@ import com.squareup.picasso.Picasso
 class HomeFragmentController(
     private val onClickedCallback: (String) -> Unit
 ): EpoxyController() {
+
     var isLoading:Boolean=false
     set(value) {
         field=value
@@ -33,21 +33,35 @@ class HomeFragmentController(
     }
 
 
-
     override fun buildModels() {
         if (isLoading){
-            //show loading state
+            LoadingEpoxyModel().id("loading_state").addTo(this)
             return
         }
         if (attractions.isEmpty()){
-            //show empty state
+            EmptyEpoxyModel().id("empty_state").addTo(this)
             return
         }
+        val firstGroup=attractions.filter { it.title.startsWith("s",true) || it.title.startsWith("D",true) }
+
+        HeaderEpoxyModel("recently viewed")
+            .id("header_1")
+            .addTo(this)
+
+        firstGroup.forEach { attraction ->
+            AttractionEpoxyModel(attraction, onClickedCallback )
+                .id(attraction.id)
+                .addTo(this)
+        }
+
+        HeaderEpoxyModel("all attractions")
+            .id("header_2")
+            .addTo(this)
+
         attractions.forEach { attraction ->
             AttractionEpoxyModel(attraction, onClickedCallback )
                 .id(attraction.id)
                 .addTo(this)
-
         }
     }
 
@@ -55,15 +69,24 @@ class HomeFragmentController(
         :ViewBindingKotlinModel<ViewHolderAttractionBinding>(R.layout.view_holder_attraction){
         override fun ViewHolderAttractionBinding.bind() {
             tvTitle.text = attraction.title
-            Picasso.get().load(attraction.image_url).into(ivImage)
+            if (attraction.image_urls.isNotEmpty()){
+                Picasso.get().load(attraction.image_urls[0]).into(ivImage)
+            }
             tvMonthTovisit.text = attraction.months_to_visit
 
             root.setOnClickListener {
                 onClicked(attraction.id)
             }
         }
-
     }
+
+    data class HeaderEpoxyModel(val headerText:String)
+        :ViewBindingKotlinModel<EpoxyModelHeaderBinding>(R.layout.epoxy_model_header){
+        override fun EpoxyModelHeaderBinding.bind() {
+            tvHeader.text=headerText
+        }
+    }
+
 
 
 

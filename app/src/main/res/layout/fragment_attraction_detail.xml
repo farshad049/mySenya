@@ -5,15 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivDetailImage"
+    <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/ivHeaderEpoxyRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+        android:id="@+id/indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/tvDetailTitle"
+        app:layout_constraintTop_toTopOf="@id/tvDetailTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        app:spi_dotColor="@color/white"
+        app:spi_dotSelectedColor="@color/teal_200"
+        />
 
     <TextView
         android:id="@+id/tvDetailTitle"
@@ -25,7 +38,7 @@
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/ivDetailImage" />
+        app:layout_constraintBottom_toBottomOf="@+id/ivHeaderEpoxyRecyclerView" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -35,7 +48,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tvDetailTimeToVisit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivDetailImage"
+        app:layout_constraintTop_toBottomOf="@+id/ivHeaderEpoxyRecyclerView"
         app:layout_constraintVertical_bias="0.0"
         tools:text="@tools:sample/lorem/random" />
 
@@ -58,8 +71,8 @@
         android:id="@+id/tvFacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:background="?selectableItemBackground"
+        android:padding="16dp"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
