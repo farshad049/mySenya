@@ -26,14 +26,19 @@ class HomeFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //move to attraction activity
-        val epoxyController = HomeFragmentController { attractionId ->
+        //when u click on an item it will pass the string to adapter and send you to attractionDetailFragment
+        //"val epoxyController" is the prepared Epoxy controller with given data , so we can use it another where
+        val epoxyController = HomeFragmentController() { attractionId ->
+            //get id from liveData
             activityViewModel.onAttractionSelected(attractionId)
+            //move to attraction activity
             navController.navigate(R.id.action_homeFragment_to_attractionDetailFragment)
         }
-        binding.epoxyRecyclerView.setController(epoxyController)
+
         binding.epoxyRecyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL))
         epoxyController.isLoading=true
+
+        binding.epoxyRecyclerView.setController(epoxyController)
         //observe changes from list data
         activityViewModel.attractionListLiveData.observe(viewLifecycleOwner){attractions ->
             epoxyController.attractions=attractions

@@ -10,20 +10,26 @@ import com.example.mysenya.ui.epoxy.ViewBindingKotlinModel
 import com.example.mysenya.ui.fragment.home.HomeFragmentController
 import com.squareup.picasso.Picasso
 
-class AttractionFragmentController(
-     val imageUrls:List<String>
+class HeaderController(
+     //val imageUrls:List<String>
+    val imageUrls:Attraction
 ): EpoxyController() {
 
 
 
     override fun buildModels() {
 
-
-        imageUrls.forEachIndexed { index, url ->
+        imageUrls.image_urls.forEachIndexed { index, url ->
             ImageEpoxyModel(url)
                 .id(index)
                 .addTo(this)
         }
+
+//        imageUrls.forEachIndexed { index, url ->
+//            ImageEpoxyModel(url)
+//                .id(index)
+//                .addTo(this)
+//        }
 
     }
 

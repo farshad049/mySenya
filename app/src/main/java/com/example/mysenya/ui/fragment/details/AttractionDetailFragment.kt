@@ -3,11 +3,12 @@ package com.example.mysenya.ui.fragment.details
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.mysenya.R
 import com.example.mysenya.databinding.FragmentAttractionDetailBinding
 import com.example.mysenya.ui.fragment.BaseFragment
-import com.squareup.picasso.Picasso
 
 
 class AttractionDetailFragment: BaseFragment() {
@@ -34,33 +35,52 @@ class AttractionDetailFragment: BaseFragment() {
 
         activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner){attraction->
 
-            binding.ivHeaderEpoxyRecyclerView.setControllerAndBuildModels(AttractionFragmentController(attraction.image_urls))
+            binding.ivHeaderEpoxyRecyclerView.setControllerAndBuildModels(HeaderController(attraction))
             //in order to scroll images completely
             LinearSnapHelper().attachToRecyclerView(binding.ivHeaderEpoxyRecyclerView)
             //set page indicator
             binding.indicator.attachToRecyclerView(binding.ivHeaderEpoxyRecyclerView)
 
-            binding.tvDetailTitle.text=attraction.title
-            binding.tvDescription.text=attraction.description
-            binding.tvDetailTimeToVisit.text=attraction.months_to_visit
-            binding.tvFacts.text="${attraction.facts.size} facts"
-            //take each fact as a single string to show
-            val stringBuilder=StringBuilder("")
-            attraction.facts.forEach {
-                stringBuilder.append("\u2022  $it")
-                stringBuilder.append("\n\n")
-            }
-            //delete the last \n to prevent the last new line
-            val factsToShow=stringBuilder.toString().substring(0,stringBuilder.toString().lastIndexOf("\n\n"))
+            var isGridMode:Boolean=binding.contentEpoxyRecyclerView.layoutManager is GridLayoutManager
+            //ContentEpoxyController has been initialized with the require data and its ready to use
+            val contentEpoxyController=ContentEpoxyController(attraction)
+            contentEpoxyController.isGridMode =isGridMode
+            contentEpoxyController.onChangeLayoutCallBack={
+                if (isGridMode){
+                    binding.contentEpoxyRecyclerView.layoutManager=LinearLayoutManager(requireContext())
+                }else{
+                    binding.contentEpoxyRecyclerView.layoutManager=GridLayoutManager(requireContext(),2)
+                }
+                isGridMode = !isGridMode
+                contentEpoxyController.isGridMode=isGridMode
+                contentEpoxyController.requestModelBuild()
 
-            binding.tvFacts.setOnClickListener {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("${attraction.title} facts")
-                    .setMessage(factsToShow)
-                    .setPositiveButton("ok") {dialog,which -> TODO()}
-                    .setCancelable(false)
-                    .show()
             }
+
+
+            binding.tvDetailTitle.text=attraction.title
+            binding.contentEpoxyRecyclerView.setControllerAndBuildModels(contentEpoxyController)
+
+
+
+//
+//            binding.tvFacts.setOnClickListener {
+            //take each fact as a single string to show
+//            val stringBuilder=StringBuilder("")
+//            attraction.facts.forEach {
+//                stringBuilder.append("\u2022  $it")
+//                stringBuilder.append("\n\n")
+//            }
+//            //delete the last \n to prevent the last new line
+//            val factsToShow=stringBuilder.toString().substring(0,stringBuilder.toString().lastIndexOf("\n\n"))
+
+//                AlertDialog.Builder(requireContext())
+//                    .setTitle("${attraction.title} facts")
+//                    .setMessage(factsToShow)
+//                    .setPositiveButton("ok") {dialog,which -> TODO()}
+//                    .setCancelable(false)
+//                    .show()
+//            }
         }
     }
 
